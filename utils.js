@@ -59,3 +59,34 @@ export async function changeCommitsAuthor() {
     }
   }
 }
+
+export async function pushRepos() {
+  //await $`gh auth refresh -h github.com -s delete_repo`
+
+  try {
+    cd("repos")
+
+    let repos = await $`ls`
+
+    repos = repos.stdout.split("\n").filter(Boolean)
+
+    for (let repo of repos) {
+      try {
+        console.log(repo)
+
+        //await $`gh repo delete ${repo} --confirm`
+        await $`gh repo create --source ${repo}/ --push --private --remote=${repo}`
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  } catch (p) {
+    console.error(p)
+  } finally {
+    const dir = process.cwd()
+
+    if (dir.includes("repos")) {
+      cd("..")
+    }
+  }
+}
