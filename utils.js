@@ -66,18 +66,33 @@ export async function pushRepos() {
   try {
     cd("repos")
 
+    $.verbose = false
     let repos = await $`ls`
+    $.verbose = true
 
     repos = repos.stdout.split("\n").filter(Boolean)
 
     for (let repo of repos) {
       try {
-        console.log(repo)
-
+        console.log(chalk.blue(`Creating ${repo}...`))
+        await $`pwd`
+        await cd(repo)
+        await $`git remote | xargs -n1 git remote remove`
         //await $`gh repo delete ${repo} --confirm`
-        await $`gh repo create --source ${repo}/ --push --private --remote=${repo}`
+        await $`pwd`
+
+        cd("..")
+        await $`pwd`
+
+        await $`gh repo create --source ${repo} --push --private --remote origin`
+        console.log(chalk.cyan(`${repo} repo created`))
       } catch (e) {
         console.log(e)
+      } finally {
+        const dir = process.cwd()
+        if (dir.includes(repo)) {
+          //cd("..")
+        }
       }
     }
   } catch (p) {
@@ -88,5 +103,28 @@ export async function pushRepos() {
     if (dir.includes("repos")) {
       cd("..")
     }
+  }
+}
+
+export async function makeReposPublic() {
+  try {
+    cd("repos")
+
+    $.verbose = false
+    let repos = await $`ls`
+    $.verbose = true
+
+    repos = repos.stdout.split("\n").filter(Boolean)
+
+    for (let repo of repos) {
+      try {
+        await $`gh repo edit iamzapata/${repo} --visibility public`
+        console.log(chalk.blue(`Inspecting ${repo}...`))
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  } catch (p) {
+    console.error(p)
   }
 }

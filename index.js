@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 import "zx/globals"
 
-import { pushRepos, changeCommitsAuthor } from "./utils"
+import { pushRepos, changeCommitsAuthor, makeReposPublic } from "./utils"
 
-pushRepos()
+makeReposPublic()
