@@ -1,0 +1,16 @@
+{
+  "name": "GithubAndFelZapata",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Andres Zapata <me@azapata.io>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "yarn vite-node index --watch",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "vite-node": "^0.24.0",
+    "zx": "^7.1.0"
+  }
+}
